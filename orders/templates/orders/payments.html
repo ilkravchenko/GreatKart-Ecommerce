@@ -96,13 +96,15 @@
                     </dl>
                     <dl class="dlist-align">
                     <dt>Total:</dt>   
-                    <dd class="text-right text-dark b"><strong>₴{{ grand_total | floatformat:2 }}</strong></dd>
+                    <dd class="text-right text-dark b"><strong>₴{{ grand_total | floatformat:2 }} {{ grand_total | floatformat:2 |json_script:"amount"}}</strong></dd>
                     </dl>
                     <hr>
                     <p class="text-center mb-3">
                         <img src="{% static './images/misc/payments.png' %}" height="26">
                     </p>
-                    <a href="{% url 'checkout' %}" class="btn btn-primary btn-block"> Make Payment </a>
+                    <div id="paypal-button-container">
+                        <!-- PayPal button will load -->
+                    </div>
                 </div> <!-- card-body.// -->
                 </div> <!-- card.// -->
         
@@ -115,5 +117,55 @@
     </div> <!-- container .//  -->
     </section>
     <!-- ========================= SECTION CONTENT END// ========================= -->
+
+    <script>
+
+        var amount = JSON.parse(document.getElementById('amount').textContent);
+        var url = "{% url 'payments' %}"
+        var orderID = "{{ order.order_number }}"
+        var payment_method = 'PayPal'
+        var CSRF_TOKEN = '{{ csrf_token }}';
+
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+            // Call your server to set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{  
+                        amount: {
+                            value: amount,
+                        }
+                    }]
+                });
+            },
+
+            // Call your server to finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    console.log(details);
+                    sendData()
+                    function sendData(){
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-type': 'application/json',
+                                'X-CSRFToken': CSRF_TOKEN,
+                            },
+                            body: JSON.stringify({
+                                orderID: orderID,
+                                transID: details.id,
+                                payment_method: payment_method,
+                                status: details.status,
+                            }),
+                        })
+                        //.then(response => response.json())
+                        //.then(data => console.log(data))
+                    }
+                });
+            }
+
+        }).render('#paypal-button-container');
+    </script>
 
 {% endblock %}
