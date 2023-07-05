@@ -1,0 +1,9 @@
+{% autoescape off %}
+
+    Hi {{ user.first_name | capfirst }},
+
+    Your Order has been received!
+
+    Your Order Number: {{ order.order_number }}.
+
+{% endautoescape %}
