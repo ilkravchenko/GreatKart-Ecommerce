@@ -1,0 +1,73 @@
+.rate > input {
+    display: none;
+}
+
+.rate{
+    display: inline-block;
+    border: 0;
+}
+
+.rate > label{
+    float: right;
+}
+
+/* Showing the stars */
+.rate > label:before{
+    display: inline-block;
+    font-size: 1.3rem;
+    font-family: FontAwesome;
+    content: "\f005";
+    margin: 0;
+    padding: 0.4rem .2rem;
+    cursor: pointer;
+}
+
+/* Click and hover */
+input:checked ~ label, label:hover ~ label{
+    color: #ffb503;
+}
+
+/* Half stars */
+.rate .half:before{
+    content: "\f089";
+    position: absolute;
+    padding-right: 0;
+}
+
+/* hover hightlight */
+input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover ~ label,
+label:hover ~ input:checked ~ label{
+    color: #cc9000;
+}
+
+.submit-review-container {
+    display: flex;
+    align-items: center;
+}
+
+.btn-primary.disabled:hover {
+    cursor: not-allowed;
+    background-color: #dcdcdc;
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+    color: #333;
+    border: 1px solid #333;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.submit-review-message {
+    display: none;
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+    color: #333;
+    border: 1px solid #333;
+    border-radius: 4px;
+    text-align: center;
+    background-color: #fff;
+    margin-left: 10px; /* Adjust the margin as needed */
+}
+
+.submit-review-container:hover .submit-review-message {
+    display: block;
+}
