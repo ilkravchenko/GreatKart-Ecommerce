@@ -71,3 +71,7 @@ label:hover ~ input:checked ~ label{
 .submit-review-container:hover .submit-review-message {
     display: block;
 }
+
+.star-color{
+    color: #ffb503;
+}

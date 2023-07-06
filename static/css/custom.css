@@ -40,6 +40,10 @@ label:hover ~ input:checked ~ label{
     color: #cc9000;
 }
 
+.submit-review-container {
+    display: flex;
+    align-items: center;
+}
 
 .btn-primary.disabled:hover {
     cursor: not-allowed;
@@ -50,4 +54,20 @@ label:hover ~ input:checked ~ label{
     border: 1px solid #333;
     border-radius: 4px;
     text-align: center;
+}
+
+.submit-review-message {
+    display: none;
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+    color: #333;
+    border: 1px solid #333;
+    border-radius: 4px;
+    text-align: center;
+    background-color: #fff;
+    margin-left: 10px; /* Adjust the margin as needed */
+}
+
+.submit-review-container:hover .submit-review-message {
+    display: block;
 }

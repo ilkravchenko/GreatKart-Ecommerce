@@ -7,6 +7,7 @@ from carts.models import CartItem
 from django.db.models import Q
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib import messages
+from orders.models import OrderProduct
 
 
 
@@ -47,9 +48,19 @@ def product_detail(request, category_slug, product_slug):
     except Exception as e:
         raise e
     
+    try:
+        order_product = OrderProduct.objects.filter(user=request.user.id, product_id=single_product.id).exists()
+    except OrderProduct.DoesNotExist:
+        order_product = None
+        
+    # Get the reviews
+    reviews = ReviewRating.objects.filter(product_id=single_product.id, status=True)
+        
     context = {
         'single_product': single_product,
         'in_cart': in_cart,
+        'order_product': order_product,
+        'reviews': reviews,
     }
     return render(request, 'store/product_detail.html', context=context)
 
