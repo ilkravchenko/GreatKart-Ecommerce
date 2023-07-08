@@ -55,6 +55,7 @@ class Order(models.Model):
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
     
+    
 class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True, null=True)
