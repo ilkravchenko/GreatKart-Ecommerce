@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import RegistrationForm
-from .models import Account
+from .forms import RegistrationForm, UserForm, UserProileForm
+from .models import Account, UserProfile
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 
@@ -37,6 +37,12 @@ def register(request):
                                                password=password, username=username)
             user.phone_number = phone_number
             user.save()
+            
+            # Create UserProfile
+            profile = UserProfile()
+            profile.user_id = user.id
+            profile.profile_picture = 'default/default-user.png'
+            profile.save()
             
             # USER ACTIVATION
             current_site = get_current_site(request)
@@ -254,3 +260,28 @@ def my_orders(request):
     }
     
     return render(request, 'accounts/my_orders.html', context=context)
+
+
+def edit_profile(request):
+    userprofile = get_object_or_404(UserProfile, user=request.user)
+    
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        user_profile_form = UserProileForm(request.POST, request.FILES, instance=userprofile)
+        if user_form.is_valid() and user_profile_form.is_valid():
+            user_form.save()
+            user_profile_form.save()
+            messages.success(request, 'Your profile has been updated')
+            
+            return redirect('edit_profile')
+    else:
+        user_form = UserForm(instance=request.user)
+        user_profile_form = UserProileForm(instance=userprofile) 
+    
+    context = {
+        'user_form': user_form,
+        'user_profile_form': user_profile_form,
+        'userprofile': userprofile,
+    }
+    
+    return render(request, 'accounts/edit_profile.html', context=context)
